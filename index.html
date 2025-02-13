@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Valentine của Thanh Hiếu và Lệ Trinh</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600&display=swap"
+    />
+    <style>
+      /* Reset & thiết lập chung */
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        background-color: pink;
+        text-align: center;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        overflow: auto;
+        margin: 0;
+        /* Hỗ trợ safe-area cho các thiết bị iOS (bao gồm iPhone 15 Pro) */
+        padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0)
+          env(safe-area-inset-bottom, 0) env(safe-area-inset-left, 0);
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+      /* Container chính giới hạn chiều rộng */
+      .container {
+        display: none;
+        padding: 20px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+      /* Tiêu đề */
+      h1 {
+        font-size: 36px;
+        color: #e60073;
+        font-family: "Dancing Script", cursive;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 2s ease-in-out;
+        margin: 10px 0;
+      }
+      .name-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        margin: 10px 0;
+      }
+      /* Tên sử dụng font cách điệu và màu sắc nổi bật */
+      .name-container h2 {
+        font-family: "Dancing Script", cursive;
+        font-size: 26px;
+        color: #8b0000;
+        font-weight: bold;
+        margin: 0;
+      }
+      .name-container img {
+        width: 40px;
+        animation: pulse 2s infinite;
+      }
+      /* Hiệu ứng đếm ngày (dành cho dòng ngắn) */
+      .typing {
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        font-size: 22px;
+        color: #800000;
+        border-right: 2px solid #800000;
+        max-width: 0;
+        animation: typing 6s steps(30, end) forwards,
+          blinkCursor 1s step-end infinite;
+      }
+      @keyframes typing {
+        from {
+          max-width: 0;
+        }
+        to {
+          max-width: 100%;
+        }
+      }
+      @keyframes blinkCursor {
+        50% {
+          border-color: transparent;
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @keyframes floatingHeart {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 0;
+        }
+      }
+      .heart-effect {
+        position: absolute;
+        font-size: 24px;
+        color: red;
+        animation: floatingHeart 3s linear infinite;
+      }
+      /* Thiệp mở đầu */
+      .card {
+        position: absolute;
+        left: -250px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 200px;
+        height: 130px;
+        background-color: white;
+        border: 3px solid red;
+        border-radius: 10px;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: red;
+        transition: all 2s ease-in-out;
+        cursor: pointer;
+      }
+      .card.fly {
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      /* Nút điều khiển nhạc dạng text */
+      .music-control {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 10px 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        font-size: 16px;
+        color: #e60073;
+      }
+      /* Slideshow (sử dụng display để hiển thị ảnh) */
+      .slideshow {
+        width: 90%;
+        max-width: 600px;
+        margin: 20px auto;
+        overflow: hidden;
+        position: relative;
+        border: 3px solid red;
+        border-radius: 10px;
+      }
+      .slideshow img {
+        width: 100%;
+        height: auto;
+        display: none;
+      }
+      .slideshow img.active {
+        display: block;
+      }
+      /* Love-message với hiệu ứng gõ máy qua JS */
+      #love-message {
+        display: none;
+        font-size: 22px;
+        color: #800000;
+        white-space: normal;
+        word-wrap: break-word;
+        margin: 20px auto;
+        max-width: 90%;
+        text-align: left;
+        border-right: 2px solid #800000;
+        overflow: hidden;
+        /* Thụt đầu dòng cho lời chúc */
+        text-indent: 1em;
+      }
+      /* Responsive cho thiết bị nhỏ */
+      @media (max-width: 480px) {
+        h1 {
+          font-size: 30px;
+        }
+        .name-container h2 {
+          font-size: 20px;
+        }
+        .typing {
+          font-size: 18px;
+        }
+        .card {
+          width: 150px;
+          height: 100px;
+          font-size: 16px;
+        }
+        .music-control {
+          font-size: 14px;
+          padding: 8px 12px;
+        }
+        .slideshow {
+          width: 95%;
+          margin: 15px auto;
+          border-width: 2px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Nhạc nền (không có autoplay để tránh lỗi trên mobile; phát khi mở form) -->
+    <audio id="background-music" autoplay loop>
+      <source src="/nhac.mp3" type="audio/mpeg" />
+    </audio>
+
+    <!-- Nút bật/tắt nhạc dạng text -->
+    <button id="music-toggle" class="music-control">Tắt âm</button>
+
+    <!-- Thiệp mở đầu -->
+    <div class="card">💌 Mở thiệp</div>
+
+    <!-- Nội dung sau khi mở thiệp -->
+    <div class="container">
+      <h1>Chúc mừng Valentine!</h1>
+      <div class="name-container">
+        <h2>Nguyễn Thanh Hiếu</h2>
+        <img src="./img/giphy.gif" alt="Trái tim GIF" />
+        <h2>Lê Thị Lệ Trinh</h2>
+      </div>
+
+      <!-- Đếm số ngày với hiệu ứng CSS (dành cho dòng ngắn) -->
+      <h2 class="typing" id="day-counter">
+        Chúng ta đã bên nhau <span id="counter">0</span> ngày
+      </h2>
+
+      <!-- Slideshow (sẽ xuất hiện sau 3.5 giây kể từ khi mở thư) -->
+      <div class="slideshow" id="slideshow">
+        <img src="img/picture/slideshow1.jpg" alt="Slide 1" class="slide" />
+        <img src="img/picture/slideshow2.jpg" alt="Slide 2" class="slide" />
+        <img src="img/picture/slideshow3.jpg" alt="Slide 3" class="slide" />
+        <img src="img/picture/slideshow4.jpg" alt="Slide 1" class="slide" />
+        <img src="img/picture/slideshow5.jpg" alt="Slide 2" class="slide" />
+        <img src="img/picture/slideshow6.jpg" alt="Slide 3" class="slide" />
+        <img src="img/picture/slideshow7.jpg" alt="Slide 1" class="slide" />
+        <img src="img/picture/slideshow8.jpg" alt="Slide 2" class="slide" />
+        <img src="img/picture/slideshow9.jpg" alt="Slide 3" class="slide" />
+        <img src="img/picture/slideshow10.jpg" alt="Slide 1" class="slide" />
+        <img src="img/picture/slideshow11.jpg" alt="Slide 2" class="slide" />
+        <img src="img/picture/slideshow12.jpg" alt="Slide 3" class="slide" />
+      </div>
+
+      <!-- Love-message: nội dung sẽ được thêm qua JS với hiệu ứng gõ máy -->
+      <div id="love-message"></div>
+    </div>
+
+    <script>
+      // Hàm đếm số ngày với tốc độ thay đổi theo từng giai đoạn:
+      function calculateTime() {
+        const startDate = new Date(2022, 3, 18);
+        const today = new Date();
+        const totalDays = Math.floor(
+          (today - startDate) / (1000 * 60 * 60 * 24)
+        );
+        const counterElement = document.getElementById("counter");
+
+        function incrementCounter(counter) {
+          if (counter <= totalDays) {
+            counterElement.textContent = counter;
+            let delay;
+            if (counter < 100) {
+              delay = 100; // Chậm ở 100 ngày đầu
+            } else if (totalDays - counter < 100) {
+              delay = 100; // Chậm ở 100 ngày cuối
+            } else {
+              delay = 20; // Nhanh ở giữa
+            }
+            setTimeout(() => incrementCounter(counter + 1), delay);
+          }
+        }
+        incrementCounter(0);
+      }
+
+      // Hàm tạo hiệu ứng trái tim bay
+      function createHeartEffect() {
+        setInterval(() => {
+          const heart = document.createElement("div");
+          heart.innerHTML = "❤️";
+          heart.classList.add("heart-effect");
+          document.body.appendChild(heart);
+          heart.style.left = Math.random() * 100 + "vw";
+          heart.style.top = Math.random() * 100 + "vh";
+          setTimeout(() => heart.remove(), 3000);
+        }, 500);
+      }
+
+      // Hàm slideshow sử dụng display để hiển thị ảnh
+      function startSlideShow() {
+        const slides = document.querySelectorAll(".slideshow .slide");
+        let currentSlide = 0;
+        slides[currentSlide].classList.add("active");
+        setInterval(() => {
+          slides[currentSlide].classList.remove("active");
+          currentSlide = (currentSlide + 1) % slides.length;
+          slides[currentSlide].classList.add("active");
+        }, 3000);
+      }
+
+      // Hàm hiệu ứng typewriter: gõ từng ký tự của chuỗi vào element
+      function typeWriter(element, text, speed) {
+        element.style.display = "block"; // Hiện element
+        element.innerHTML = ""; // Xóa nội dung cũ
+        let i = 0;
+        function type() {
+          if (i < text.length) {
+            element.innerHTML += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+          } else {
+            element.style.borderRight = "none";
+          }
+        }
+        type();
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const card = document.querySelector(".card");
+        const music = document.getElementById("background-music");
+        const musicToggle = document.getElementById("music-toggle");
+
+        setTimeout(() => card.classList.add("fly"), 2000);
+
+        card.addEventListener("click", () => {
+          document.querySelector(".container").style.display = "block";
+          card.style.display = "none";
+          // Phát nhạc ngay khi mở thư
+          music.play();
+          // Bắt đầu đếm số ngày
+          calculateTime();
+          // Sau 3.5 giây, bắt đầu slideshow
+          setTimeout(startSlideShow, 3500);
+          // Sau 5.5 giây, hiển thị lời chúc với hiệu ứng gõ máy
+          setTimeout(() => {
+            const fullMessage =
+              "Em là nguồn cảm hứng của từng nhịp đập trái tim anh; chúc mừng Valentine, mong rằng tình yêu của chúng ta mãi rạng ngời như những vì sao trên bầu trời.";
+            typeWriter(
+              document.getElementById("love-message"),
+              fullMessage,
+              50
+            );
+          }, 5500);
+          // Tạo hiệu ứng trái tim bay
+          createHeartEffect();
+        });
+
+        musicToggle.addEventListener("click", () => {
+          if (music.paused) {
+            music.play();
+            musicToggle.textContent = "Tắt âm";
+          } else {
+            music.pause();
+            musicToggle.textContent = "Bật âm";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
