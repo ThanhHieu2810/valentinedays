@@ -256,6 +256,8 @@
         Chúng ta đã bên nhau <span id="counter">0</span> ngày
       </h2>
 
+      <div id="love-message"></div>
+
       <!-- Slideshow (sẽ xuất hiện sau 3.5 giây kể từ khi mở thư) -->
       <div class="slideshow" id="slideshow">
         <img src="img/picture/slideshow1.jpg" alt="Slide 1" class="slide" />
@@ -273,13 +275,12 @@
       </div>
 
       <!-- Love-message: nội dung sẽ được thêm qua JS với hiệu ứng gõ máy -->
-      <div id="love-message"></div>
     </div>
 
     <script>
       // Hàm đếm số ngày với tốc độ thay đổi theo từng giai đoạn:
       function calculateTime() {
-        const startDate = new Date(2022, 3, 18);
+        const startDate = new Date(2023, 3, 18);
         const today = new Date();
         const totalDays = Math.floor(
           (today - startDate) / (1000 * 60 * 60 * 24)
